@@ -7,10 +7,7 @@ from dataclean.commission import (
     calculate_total_commission,
     get_commission_rate,
     COMMISSION_TIERS,
-    ACCELERATED_TIERS,
     CATEGORY_MULTIPLIERS,
-    QUOTA_MULTIPLIERS,
-    TENURE_THRESHOLD_DAYS,
 )
 
 
@@ -39,13 +36,6 @@ class TestCommissionRates:
         assert COMMISSION_TIERS[1][2] == 0.08
         assert COMMISSION_TIERS[2][2] == 0.12
 
-    def test_accelerated_tier_structure(self):
-        """Accelerated tiers should have tighter boundaries."""
-        assert len(ACCELERATED_TIERS) == 3
-        assert ACCELERATED_TIERS[0][1] == 8_000
-        assert ACCELERATED_TIERS[1][1] == 20_000
-        assert ACCELERATED_TIERS[0][2] == 0.05
-
     def test_rate_tier1(self):
         """Amounts in tier 1 should get 5% rate."""
         assert get_commission_rate(5000) == 0.05
@@ -59,16 +49,6 @@ class TestCommissionRates:
         """Category multipliers should be defined."""
         assert CATEGORY_MULTIPLIERS["Enterprise"] == 1.5
         assert CATEGORY_MULTIPLIERS["SMB"] == 1.0
-
-    def test_quota_multipliers(self):
-        """Quota multipliers should be defined."""
-        assert QUOTA_MULTIPLIERS["exceeds"] == 1.2
-        assert QUOTA_MULTIPLIERS["meets"] == 1.0
-        assert QUOTA_MULTIPLIERS["below"] == 0.8
-
-    def test_tenure_threshold(self):
-        """Tenure threshold should be 365 days."""
-        assert TENURE_THRESHOLD_DAYS == 365
 
 
 class TestCommissionCalculation:

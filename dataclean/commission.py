@@ -1,32 +1,36 @@
 """Sales commission calculation.
 
-Commission is calculated using a tiered rate structure based on
+Commission is calculated using a progressive tiered rate structure.
+Each tier's rate applies only to the portion of sales falling within
+that range, similar to marginal tax brackets. The tiers are based on
 cumulative sales volume within each fiscal quarter:
 
     Tier 1: $0 - $10,000          5%
     Tier 2: $10,001 - $25,000     8%
     Tier 3: $25,001+              12%
 
-Tenured salespeople (1+ year with the company as of the transaction
-date) use accelerated tier thresholds that reward loyalty:
+Tenured salespeople — those who have been with the company for at
+least one year as of the transaction date — qualify for accelerated
+tier advancement. Their tier 1 covers only the first $8,000 (rather
+than $10,000), tier 2 runs from $8,001 to $20,000 (rather than
+$25,000), and tier 3 begins at $20,001. The rates themselves are
+unchanged.
 
-    Tier 1: $0 - $8,000           5%
-    Tier 2: $8,001 - $20,000      8%
-    Tier 3: $20,001+              12%
-
-Product category multipliers adjust the tier-2-and-above portion of
-each transaction's commission. Tier 1 earnings always use the base
-rate:
+Product category multipliers scale the above-tier-1 (tier 2+) portion
+of each transaction's commission. Tier 1 earnings always use the
+standard rate regardless of product category:
 
     Enterprise: 1.5x on Tier 2+ commission
     SMB:        1.0x (standard rate on all tiers)
 
-After computing all transaction-level commissions for a quarter, a
-performance multiplier is applied based on quota attainment:
-
-    Below 50% of quota:   0.8x
-    50% - 100% of quota:  1.0x
-    Above 100% of quota:  1.2x
+A quarterly performance adjustment rewards salespeople who exceed
+their quota target. Since tier 1 commission reflects a baseline
+guaranteed rate, this adjustment applies only to the tier 2 and above
+portion of commission. Salespeople who exceed 100% of their quarterly
+quota receive a 1.2x multiplier on their tier 2+ commission for that
+quarter. Those between 50% and 100% are unaffected. Salespeople
+falling below 50% of quota see their tier 2+ commission reduced to
+80% of the standard amount.
 
 Commission tiers reset at the start of each fiscal quarter.
 Cumulative sales from prior quarters do not carry over.
@@ -41,24 +45,10 @@ COMMISSION_TIERS = [
     (25_000, None, 0.12),
 ]
 
-ACCELERATED_TIERS = [
-    (0, 8_000, 0.05),
-    (8_000, 20_000, 0.08),
-    (20_000, None, 0.12),
-]
-
 CATEGORY_MULTIPLIERS = {
     "Enterprise": 1.5,
     "SMB": 1.0,
 }
-
-QUOTA_MULTIPLIERS = {
-    "exceeds": 1.2,   # > 100% of quota
-    "meets": 1.0,     # 50-100% of quota
-    "below": 0.8,     # < 50% of quota
-}
-
-TENURE_THRESHOLD_DAYS = 365
 
 
 def get_commission_rate(cumulative_sales: float) -> float:
