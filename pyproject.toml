@@ -12,6 +12,9 @@ license = {text = "MIT"}
 keywords = ["csv", "data-pipeline", "pandas", "etl"]
 dependencies = ["pandas>=2.0"]
 
+[tool.setuptools.packages.find]
+include = ["dataclean*"]
+
 [project.optional-dependencies]
 dev = ["pytest>=7.0", "pytest-cov"]
 
