@@ -1,15 +1,15 @@
-# DataClean
+# DataClean — Sales Commission Pipeline
 
-A CSV data pipeline for processing customer order data, enriching it with
-reference data, and generating summary reports.
+A data pipeline for processing sales transactions and calculating
+quarterly commissions for a sales team.
 
 ## Features
 
-- Read and validate CSV order data
-- Clean and normalize customer identifiers
-- Merge with customer reference data and regional zip code mappings
-- Aggregate order data by region, customer tier, and time period
-- Generate formatted summary reports
+- Read and validate CSV transaction data
+- Clean and normalize amounts and dates
+- Calculate tiered commissions based on cumulative sales volume
+- Assign fiscal quarters (fiscal year starts February)
+- Generate quarterly commission reports per salesperson
 
 ## Usage
 
@@ -17,13 +17,20 @@ reference data, and generating summary reports.
 from dataclean import Pipeline
 
 pipeline = Pipeline(
-    orders_path="data/orders.csv",
-    customers_path="data/customers.csv",
-    regions_path="data/regions.csv",
+    transactions_path="data/transactions.csv",
+    salespeople_path="data/salespeople.csv",
 )
 report = pipeline.run()
 print(report.summary())
 ```
+
+## Commission Tiers
+
+| Tier | Sales Range       | Rate |
+|------|-------------------|------|
+| 1    | $0 - $10,000      | 5%   |
+| 2    | $10,001 - $25,000 | 8%   |
+| 3    | $25,001+          | 12%  |
 
 ## Installation
 

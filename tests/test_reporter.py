@@ -2,54 +2,68 @@
 
 import pandas as pd
 
-from dataclean.reporter import Report, generate_report
+from dataclean.reporter import CommissionReport, generate_report
 
 
 class TestReporter:
     def _make_report(self):
-        by_region = pd.DataFrame({
-            "region": ["Northeast", "West"],
-            "order_count": [5, 3],
-            "total_amount": [1000.0, 800.0],
+        by_quarter = pd.DataFrame({
+            "fiscal_quarter": ["FY2025-Q3"],
+            "transaction_count": [5],
+            "total_sales": [30000.0],
+            "total_commission": [1500.0],
         })
-        by_tier = pd.DataFrame({
-            "tier": ["Gold", "Silver"],
-            "order_count": [4, 4],
-            "total_amount": [1200.0, 600.0],
-            "avg_order_value": [300.0, 150.0],
+        by_salesperson = pd.DataFrame({
+            "salesperson_id": ["S001"],
+            "name": ["Alice Chen"],
+            "transaction_count": [5],
+            "total_sales": [30000.0],
+            "total_commission": [1500.0],
         })
-        by_category = pd.DataFrame({
-            "product_category": ["Electronics", "Books"],
-            "order_count": [3, 5],
-            "total_amount": [900.0, 400.0],
+        by_sp_quarter = pd.DataFrame({
+            "salesperson_id": ["S001"],
+            "name": ["Alice Chen"],
+            "fiscal_quarter": ["FY2025-Q3"],
+            "transaction_count": [5],
+            "total_sales": [30000.0],
+            "total_commission": [1500.0],
         })
-        by_month = pd.DataFrame({
-            "month": ["2024-01"],
-            "order_count": [8],
-            "total_amount": [1800.0],
+        details = pd.DataFrame({
+            "transaction_id": ["T001"],
+            "salesperson_id": ["S001"],
+            "amount": [5000.0],
+            "commission": [250.0],
+            "fiscal_quarter": ["FY2025-Q3"],
         })
-        enriched = pd.DataFrame({
-            "order_id": [1],
-            "zip_code": ["07102"],
-        })
-        return generate_report(by_region, by_tier, by_category, by_month, enriched)
+        return generate_report(by_quarter, by_salesperson,
+                               by_sp_quarter, details)
 
-    def test_summary_contains_regions(self):
+    def test_summary_contains_quarter(self):
         report = self._make_report()
         text = report.summary()
-        assert "Northeast" in text
-        assert "West" in text
+        assert "FY2025-Q3" in text
 
-    def test_get_region_total(self):
+    def test_summary_contains_salesperson(self):
         report = self._make_report()
-        assert report.get_region_total("Northeast") == 1000.0
-        assert report.get_region_total("Nonexistent") == 0.0
+        text = report.summary()
+        assert "Alice Chen" in text
 
-    def test_get_region_count(self):
+    def test_get_quarterly_commission(self):
         report = self._make_report()
-        assert report.get_region_count("West") == 3
+        assert report.get_quarterly_commission("S001", "FY2025-Q3") == 1500.0
+        assert report.get_quarterly_commission("S001", "FY2025-Q4") == 0.0
 
-    def test_zip_code_validity(self):
+    def test_get_total_commission(self):
         report = self._make_report()
-        validity = report.get_zip_code_validity()
-        assert validity["07102"] is True
+        assert report.get_total_commission("S001") == 1500.0
+        assert report.get_total_commission("S999") == 0.0
+
+    def test_get_quarter_total(self):
+        report = self._make_report()
+        assert report.get_quarter_total("FY2025-Q3") == 1500.0
+
+    def test_get_transaction_details(self):
+        report = self._make_report()
+        details = report.get_transaction_details("S001")
+        assert len(details) == 1
+        assert details["commission"].iloc[0] == 250.0

@@ -4,29 +4,20 @@ import pandas as pd
 from pathlib import Path
 
 
-def read_orders(path: str | Path) -> pd.DataFrame:
-    """Read the orders CSV file.
+def read_transactions(path: str | Path) -> pd.DataFrame:
+    """Read the transactions CSV file.
 
-    Parses order data including order IDs, customer IDs, dates, amounts,
-    zip codes, and product categories.
+    Contains sales and return records with transaction IDs, salesperson
+    IDs, dates, amounts, and product categories.
     """
-    df = pd.read_csv(path, parse_dates=["order_date"])
+    df = pd.read_csv(path, parse_dates=["transaction_date"])
     return df
 
 
-def read_customers(path: str | Path) -> pd.DataFrame:
-    """Read the customer reference CSV file.
+def read_salespeople(path: str | Path) -> pd.DataFrame:
+    """Read the salespeople reference CSV file.
 
-    Contains customer names, tiers, and signup dates.
+    Contains salesperson names, teams, hire dates, and regions.
     """
-    df = pd.read_csv(path, parse_dates=["signup_date"])
-    return df
-
-
-def read_regions(path: str | Path) -> pd.DataFrame:
-    """Read the regional zip code mapping CSV file.
-
-    Maps zip codes to states and regions for geographic analysis.
-    """
-    df = pd.read_csv(path, dtype={"zip_code": str})
+    df = pd.read_csv(path, parse_dates=["hire_date"])
     return df
