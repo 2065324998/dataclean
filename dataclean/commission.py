@@ -1,21 +1,35 @@
 """Sales commission calculation.
 
 Commission is calculated using a tiered rate structure based on
-cumulative sales volume:
+cumulative sales volume within each fiscal quarter:
 
     Tier 1: $0 - $10,000          5%
     Tier 2: $10,001 - $25,000     8%
     Tier 3: $25,001+              12%
 
-Product category multipliers adjust the above-tier-1 portion of each
-transaction's commission. Tier 1 earnings always use the standard rate:
+Tenured salespeople (1+ year with the company as of the transaction
+date) use accelerated tier thresholds that reward loyalty:
+
+    Tier 1: $0 - $8,000           5%
+    Tier 2: $8,001 - $20,000      8%
+    Tier 3: $20,001+              12%
+
+Product category multipliers adjust the tier-2-and-above portion of
+each transaction's commission. Tier 1 earnings always use the base
+rate:
 
     Enterprise: 1.5x on Tier 2+ commission
     SMB:        1.0x (standard rate on all tiers)
 
-Higher sales volumes earn higher commission rates. The cumulative
-volume determines the tier placement, while the product category
-multiplier scales the higher-tier earnings.
+After computing all transaction-level commissions for a quarter, a
+performance multiplier is applied based on quota attainment:
+
+    Below 50% of quota:   0.8x
+    50% - 100% of quota:  1.0x
+    Above 100% of quota:  1.2x
+
+Commission tiers reset at the start of each fiscal quarter.
+Cumulative sales from prior quarters do not carry over.
 """
 
 import pandas as pd
@@ -27,10 +41,24 @@ COMMISSION_TIERS = [
     (25_000, None, 0.12),
 ]
 
+ACCELERATED_TIERS = [
+    (0, 8_000, 0.05),
+    (8_000, 20_000, 0.08),
+    (20_000, None, 0.12),
+]
+
 CATEGORY_MULTIPLIERS = {
     "Enterprise": 1.5,
     "SMB": 1.0,
 }
+
+QUOTA_MULTIPLIERS = {
+    "exceeds": 1.2,   # > 100% of quota
+    "meets": 1.0,     # 50-100% of quota
+    "below": 0.8,     # < 50% of quota
+}
+
+TENURE_THRESHOLD_DAYS = 365
 
 
 def get_commission_rate(cumulative_sales: float) -> float:

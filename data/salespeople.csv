@@ -1,4 +1,4 @@
-salesperson_id,name,team,hire_date,region
-S001,Alice Chen,Enterprise,2022-06-15,West
-S002,Bob Martinez,SMB,2023-01-20,East
-S003,Carol Park,SMB,2024-03-10,West
+salesperson_id,name,team,hire_date,region,quarterly_quota
+S001,Alice Chen,Enterprise,2022-06-15,West,28000
+S002,Bob Martinez,SMB,2023-01-20,East,10000
+S003,Carol Park,SMB,2024-03-10,West,10000
