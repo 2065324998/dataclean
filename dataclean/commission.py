@@ -7,7 +7,15 @@ cumulative sales volume:
     Tier 2: $10,001 - $25,000     8%
     Tier 3: $25,001+              12%
 
-Higher sales volumes earn higher commission rates.
+Product category multipliers adjust each transaction's marginal
+commission:
+
+    Enterprise: 1.5x
+    SMB:        1.0x
+
+Higher sales volumes earn higher commission rates. The product
+category multiplier is applied to each transaction's marginal
+commission.
 """
 
 import pandas as pd
@@ -18,6 +26,11 @@ COMMISSION_TIERS = [
     (10_000, 25_000, 0.08),
     (25_000, None, 0.12),
 ]
+
+CATEGORY_MULTIPLIERS = {
+    "Enterprise": 1.5,
+    "SMB": 1.0,
+}
 
 
 def get_commission_rate(cumulative_sales: float) -> float:
