@@ -16,12 +16,22 @@ than $10,000), tier 2 runs from $8,001 to $20,000 (rather than
 $25,000), and tier 3 begins at $20,001. The rates themselves are
 unchanged.
 
-Product category multipliers scale the above-tier-1 (tier 2+) portion
-of each transaction's commission. Tier 1 earnings always use the
-standard rate regardless of product category:
+Product category multipliers scale the above-tier-1 portion of each
+transaction's commission. Tier 1 earnings always use the standard
+rate regardless of product category. Tiers 2 and 3 each have their
+own category scaling applied to the commission earned in that tier:
 
-    Enterprise: 1.5x on Tier 2+ commission
-    SMB:        1.0x (standard rate on all tiers)
+    Tier 2 category multipliers:
+        Enterprise: 1.5x
+        SMB:        1.0x
+
+    Tier 3 category multipliers:
+        Enterprise: 2.0x
+        SMB:        1.2x
+
+When a single transaction spans multiple tiers, each tier's portion
+of the commission is multiplied by that tier's category factor
+independently.
 
 Quarterly quota adjustment
 --------------------------
@@ -36,11 +46,11 @@ amount depends on the salesperson's quota attainment ratio
                         (deducted)
 
 The adjustment is distributed across the quarter's transactions in
-proportion to each transaction's tier 2+ base commission (the tier 2+
-amount computed at standard rates, before the category multiplier is
-applied). Transactions that fall entirely within tier 1 receive no
-share of the adjustment. Each allocated share is rounded to the
-nearest cent.
+proportion to each transaction's tier 2+ base commission (the sum of
+raw commission earned in tiers 2 and 3 at standard rates, before any
+category multiplier). Transactions that fall entirely within tier 1
+receive no share of the adjustment. Each allocated share is rounded
+to the nearest cent.
 
 Commission tiers reset at the start of each fiscal quarter.
 Cumulative sales from prior quarters do not carry over.
