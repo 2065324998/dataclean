@@ -33,24 +33,25 @@ When a single transaction spans multiple tiers, each tier's portion
 of the commission is multiplied by that tier's category factor
 independently.
 
-Quarterly quota adjustment
---------------------------
+Quarterly quota settlement
+-------------------------
 After computing all per-transaction commissions for a salesperson
-within a quarter, a quota-based adjustment is applied. The adjustment
-amount depends on the salesperson's quota attainment ratio
-(total quarterly sales / quarterly quota):
+within a quarter, a quota-based settlement adjustment is applied.
+The settlement pool is funded based on the salesperson's quota
+attainment ratio (total quarterly sales / quarterly quota):
 
-    Attainment > 100%:  bonus  = (total sales - quota) x 3%
+    Attainment > 100%:  bonus pool  = (total sales - quota) x 3%
     Attainment 50-100%: no adjustment
-    Attainment < 50%:   penalty = total tier 2+ base commission x 2%
-                        (deducted)
+    Attainment < 50%:   penalty pool = sum of tier 2+ base x 2%
+                        (deducted from commissions)
 
-The adjustment is distributed across the quarter's transactions in
-proportion to each transaction's tier 2+ base commission (the sum of
-raw commission earned in tiers 2 and 3 at standard rates, before any
-category multiplier). Transactions that fall entirely within tier 1
-receive no share of the adjustment. Each allocated share is rounded
-to the nearest cent.
+The pool is distributed across the quarter's transactions pro-rata.
+Each transaction's settlement share is proportional to its marginal
+contribution to the commission base above the first tier, calculated
+at the tier rates before any category scaling is applied. Only
+transactions that generated commission in the upper tiers participate
+in the settlement — those falling entirely within the initial tier
+bracket receive no allocation.
 
 Commission tiers reset at the start of each fiscal quarter.
 Cumulative sales from prior quarters do not carry over.
