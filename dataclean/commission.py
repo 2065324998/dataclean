@@ -23,14 +23,24 @@ standard rate regardless of product category:
     Enterprise: 1.5x on Tier 2+ commission
     SMB:        1.0x (standard rate on all tiers)
 
-A quarterly performance bonus rewards salespeople who exceed their
-quota target. The bonus is 20% of the base tier 2+ commission — the
-commission amount computed at tier rates before category multipliers
-are applied — added to each transaction's total. This supplements
-the category-scaled commission rather than scaling it further. For
-salespeople between 50% and 100% of quota, no adjustment is made.
-Those below 50% have a penalty of 20% of base tier 2+ commission
-deducted from each transaction.
+Quarterly quota adjustment
+--------------------------
+After computing all per-transaction commissions for a salesperson
+within a quarter, a quota-based adjustment is applied. The adjustment
+amount depends on the salesperson's quota attainment ratio
+(total quarterly sales / quarterly quota):
+
+    Attainment > 100%:  bonus  = (total sales - quota) x 3%
+    Attainment 50-100%: no adjustment
+    Attainment < 50%:   penalty = total tier 2+ base commission x 2%
+                        (deducted)
+
+The adjustment is distributed across the quarter's transactions in
+proportion to each transaction's tier 2+ base commission (the tier 2+
+amount computed at standard rates, before the category multiplier is
+applied). Transactions that fall entirely within tier 1 receive no
+share of the adjustment. Each allocated share is rounded to the
+nearest cent.
 
 Commission tiers reset at the start of each fiscal quarter.
 Cumulative sales from prior quarters do not carry over.
