@@ -14,6 +14,14 @@ import pandas as pd
 
 FISCAL_YEAR_START_MONTH = 2
 
+# Maps calendar month to fiscal quarter.
+_QUARTER_FOR_MONTH = {
+    2: 1, 3: 1, 4: 1,           # Q1: Feb - Apr
+    5: 2, 6: 2, 7: 2,           # Q2: May - Jul
+    8: 3, 9: 3,                  # Q3: Aug - Sep
+    10: 4, 11: 4, 12: 4, 1: 4,  # Q4: Oct - Jan
+}
+
 
 def get_fiscal_quarter(date) -> str:
     """Get the fiscal quarter label for a given date.
@@ -22,8 +30,7 @@ def get_fiscal_quarter(date) -> str:
     and quarter the date falls into.
     """
     month = date.month
-    shifted = (month - FISCAL_YEAR_START_MONTH) % 12 + 1
-    quarter = (shifted - 1) // 3 + 1
+    quarter = _QUARTER_FOR_MONTH[month]
     if month >= FISCAL_YEAR_START_MONTH:
         fiscal_year = date.year + 1
     else:
